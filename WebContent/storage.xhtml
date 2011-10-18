@@ -1,0 +1,258 @@
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+	<link type="text/css" rel="stylesheet" href="themes/bluesky/skin.css" />
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="top" height="120" resizable="true">
+<h:form>
+			<p:dock position="top">
+				<p:menuitem value="Home" icon="/images/dock/home.png" url="home.jsf" />
+				<p:menuitem value="Machine" icon="/images/dock/data-center.png"
+					url="compute.jsf" />
+				<p:menuitem value="Storage" icon="/images/dock/storage.png"
+					url="storage.jsf" />
+				<p:menuitem value="Network" icon="/images/dock/network.png"
+					url="network.jsf" />
+				<p:menuitem value="Templates" icon="/images/dock/template.png"
+					url="#" />
+				<p:menuitem value="Documentation" icon="/images/dock/Tutorial.png"
+					url="http://opennebula.org/documentation:documentation" />
+				<p:menuitem value="About" icon="/images/dock/info.png"
+					url="http://euranova.eu" />
+				<p:menuitem value="Sign Out" icon="/images/dock/exit.png"
+					actionListener="#{storageBean.logout}"  />
+			</p:dock>
+</h:form>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="bottom" height="30" resizable="false"
+			closable="false" collapsible="false">
+			<div align="center">OCCI Cloud Management Center</div>
+
+		</p:layoutUnit>
+
+
+		<p:layoutUnit position="center">
+			<h:form>
+				<p:toolbar>
+
+					<p:toolbarGroup align="left">
+						<p:commandButton type="push" value="Create"
+							onclick="createDlg.show();" image="ui-icon-document">
+						</p:commandButton>
+						<p:commandButton type="push" value="Update"
+							image="ui-icon ui-icon-arrowrefresh-1-w"
+							actionListener="#{storageBean.updateStr}" update="STable">
+						</p:commandButton>
+						<p:commandButton type="push" value="Delete" image="ui-icon-trash"
+							actionListener="#{storageBean.deleteStr}" update="STable">
+						</p:commandButton>
+						<p:divider />
+
+					</p:toolbarGroup>
+
+					<p:toolbarGroup align="right">
+
+						<p:commandButton type="push" value="Resize"
+							onclick="szDlg.show()"							
+							image="ui-icon ui-icon-triangle-2-n-s"
+							title="Resize the disk size">
+						</p:commandButton>
+						<p:commandButton type="push" value="Snapshot"
+							actionListener="#{storageBean.snapshotImg}"
+							image="ui-icon ui-icon-disk"
+							title="Take a Snapshot of the disk image">
+						</p:commandButton>
+						<p:commandButton type="push" value="Backup"
+							actionListener="#{storageBean.backupImg}"
+							image="ui-icon ui-icon-newwin"
+							title="Make a backup of the disk image">
+						</p:commandButton>
+						<p:commandButton type="push" value="Online"
+							actionListener="#{storageBean.onImg}"
+							image="ui-icon ui-icon-unlocked "
+							title="Put online the disk image">
+						</p:commandButton>
+						<p:commandButton type="push" value="Offline"
+							actionListener="#{storageBean.offImg}"
+							image="ui-icon ui-icon-locked" title="Put offline the disk image">
+						</p:commandButton>
+					</p:toolbarGroup>									
+				</p:toolbar>
+
+<p:dialog header="Enter New Size" widgetVar="szDlg" resizable="false">  
+    <h:form>  
+  
+        <h:panelGrid columns="2" style="margin-bottom:10px">  
+            <h:outputLabel for="size" value="Size:" />  
+            <p:inputText id="size" value="#{storageBean.size}" />  
+        </h:panelGrid>  
+  
+        <p:commandButton value="Submit" update=":display" 
+        	actionListener="#{storageBean.resizeImg}" oncomplete="szDlg.hide();"/>  
+              
+    </h:form>  
+</p:dialog>
+
+				<p:dataTable id="STable" var="str"
+					value="#{storageBean.fullStrList}" paginator="true" rows="10"
+					selection="#{storageBean.selectedStr}" selectionMode="single"
+					onRowSelectUpdate="display" onRowSelectComplete="strDialog.show()">
+
+					<f:facet name="header">
+            List of Storage Resources
+        </f:facet>
+
+					<p:column sortBy="#{str.id}" filterBy="#{str.id}">
+						<f:facet name="header">
+							<h:outputText value="ID" />
+						</f:facet>
+						<h:outputText value="#{str.id}" />
+					</p:column>
+
+					<p:column sortBy="#{str.title}" filterBy="#{str.title}">
+						<f:facet name="header">
+							<h:outputText value="Title" />
+						</f:facet>
+						<h:outputText value="#{str.title}" />
+					</p:column>
+
+					<p:column sortBy="#{str.summary}" filterBy="#{str.summary}">
+						<f:facet name="header">
+							<h:outputText value="Summary" />
+						</f:facet>
+						<h:outputText value="#{str.summary}" />
+					</p:column>
+
+					<p:column sortBy="#{str.bus}" filterBy="#{str.bus}">
+						<f:facet name="header">
+							<h:outputText value="Bus" />
+						</f:facet>
+						<h:outputText value="#{str.bus}" />
+					</p:column>
+
+					<p:column sortBy="#{str.dev_prefix}" filterBy="#{str.dev_prefix}">
+						<f:facet name="header">
+							<h:outputText value="Device Prefix" />
+						</f:facet>
+						<h:outputText value="#{str.dev_prefix}" />
+					</p:column>
+					<p:column sortBy="#{str.size}" filterBy="#{str.size}">
+						<f:facet name="header">
+							<h:outputText value="Size" />
+						</f:facet>
+						<h:outputText value="#{str.size}" />
+					</p:column>
+
+				</p:dataTable>
+
+				<p:dialog header="Storage Detail" widgetVar="strDialog"
+					resizable="false" width="200" showEffect="explode"
+					hideEffect="explode">
+
+					<h:panelGrid id="display" columns="2" cellpadding="4">
+
+					</h:panelGrid>
+				</p:dialog>
+
+			</h:form>
+
+		</p:layoutUnit>
+
+	</p:layout>
+	<p:growl id="grow" showDetail="true" />
+	<p:dialog id="crDlg" header="Storage Creation" widgetVar="createDlg"
+		showEffect="bounce" hideEffect="explode" width="600"
+		closeListener="#{storageBean.updateList}" onCloseUpdate="STable"
+		update="STable">
+		<h:form>
+
+			<p:wizard widgetVar="wiz" flowListener="#{storageBean.onFlowProcess}">
+
+				<p:tab id="gen" title="General">
+
+					<p:panel header="Storage Details">
+
+						<h:messages errorClass="error" />
+
+						<h:panelGrid columns="2" columnClasses="label, value"
+							styleClass="grid">
+							<h:outputText value="Title: *" />
+							<p:inputText required="true" label="Tilte"
+								value="#{storageBean.str.title}" />
+
+							<h:outputText value="Summary: *" />
+							<p:inputText required="true" label="Summary"
+								value="#{storageBean.str.summary}" />
+
+
+							<h:outputText value="Skip to last: " />
+							<h:selectBooleanCheckbox value="#{storageBean.skip}" />
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="path" title="Configuration">
+					<p:panel header="Image Details">
+
+						<h:messages errorClass="error" />
+
+						<h:panelGrid columns="2" columnClasses="label, value">
+
+							<h:outputText value="Path: " />
+							<p:inputText value="#{storageBean.str.filePath}" />
+
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+
+				<p:tab id="confirm" title="Summary">
+					<p:panel header="Confirmation">
+
+						<p:growl id="growl" sticky="true" showDetail="true" />
+
+						<h:panelGrid id="confirmation" columns="6">
+							<h:outputText value="Title: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{storageBean.str.title}" />
+							<br />
+							<h:outputText value="Summary: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{storageBean.str.summary}" />
+							<br />
+							<h:outputText value="Path: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{storageBean.str.filePath}" />>					 
+							
+						</h:panelGrid>
+
+						<p:commandButton value="Submit"
+							oncomplete="wiz.loadStep(wiz.cfg.steps[0], true);" update="grow"
+							actionListener="#{storageBean.save}">
+							<f:ajax render="STable" />
+						</p:commandButton>
+
+					</p:panel>
+				</p:tab>
+			</p:wizard>
+
+			<p:ajaxStatus>
+				<f:facet name="start">
+					<h:graphicImage value="../design/ajaxloading.gif" />
+				</f:facet>
+
+				<f:facet name="complete">
+					<h:outputText value="" />
+				</f:facet>
+			</p:ajaxStatus>
+
+		</h:form>
+	</p:dialog>
+</h:body>
+</html>

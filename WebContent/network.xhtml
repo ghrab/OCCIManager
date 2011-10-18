@@ -1,0 +1,228 @@
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+	<link type="text/css" rel="stylesheet" href="themes/bluesky/skin.css" />
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
+
+
+		<p:layoutUnit position="top" height="120" resizable="true">
+<h:form>
+			<p:dock position="top">
+				<p:menuitem value="Home" icon="/images/dock/home.png" url="home.jsf" />
+				<p:menuitem value="Machine" icon="/images/dock/data-center.png"
+					url="compute.jsf" />
+				<p:menuitem value="Storage" icon="/images/dock/storage.png"
+					url="storage.jsf" />
+				<p:menuitem value="Network" icon="/images/dock/network.png"
+					url="network.jsf" />
+				<p:menuitem value="Templates" icon="/images/dock/template.png"
+					url="#" />
+				<p:menuitem value="Documentation" icon="/images/dock/Tutorial.png"
+					url="http://opennebula.org/documentation:documentation" />
+				<p:menuitem value="About" icon="/images/dock/info.png"
+					url="http://euranova.eu" />
+				<p:menuitem value="Sign Out" icon="/images/dock/exit.png"
+					actionListener="#{userManagedBean.logout}"  />
+			</p:dock>
+</h:form>
+		</p:layoutUnit>
+		<p:layoutUnit position="bottom" height="30" resizable="true"
+			closable="false" collapsible="false">
+
+			<div align="center">OCCI Cloud Management Center</div>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+
+			<h:form>
+
+				<p:toolbar>
+
+					<p:toolbarGroup align="left">
+						<p:commandButton type="push" value="Create"
+							onclick="createDlg.show();" image="ui-icon-document">
+						</p:commandButton>
+						<p:commandButton type="push" value="Update"
+							image="ui-icon ui-icon-arrowrefresh-1-w"
+							actionListener="#{networkBean.logout}" update="NTable">
+						</p:commandButton>
+						<p:commandButton type="push" value="Delete" image="ui-icon-trash"
+							actionListener="#{networkBean.deleteNet}" update="NTable">
+						</p:commandButton>
+						<p:divider />
+					</p:toolbarGroup>
+					<p:toolbarGroup align="right">
+						<p:commandButton id="up" type="push" value="UP"
+							actionListener="#{networkBean.upNet}"
+							image="ui-icon ui-icon-arrow-1-n" title="Activate the network">
+						</p:commandButton>
+						<p:commandButton id="dow" type="push" value="Down"
+							actionListener="#{networkBean.downNet}"
+							image="ui-icon ui-icon-arrow-1-s" title="Desactivate the network">
+						</p:commandButton>
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<p:dataTable id="NTable" var="net"
+					value="#{networkBean.fullNetList}" paginator="true" rows="10"
+					selection="#{networkBean.selectedNet}" selectionMode="single">
+
+					<f:facet name="header">	List of Networks</f:facet>
+
+					<p:column sortBy="#{net.id}" filterBy="#{net.id}">
+						<f:facet name="header">
+							<h:outputText value="ID" />
+						</f:facet>
+						<h:outputText value="#{net.id}" />
+					</p:column>
+
+					<p:column sortBy="#{net.title}" filterBy="#{net.title}">
+						<f:facet name="header">
+							<h:outputText value="Title" />
+						</f:facet>
+						<h:outputText value="#{net.title}" />
+					</p:column>
+
+					<p:column sortBy="#{net.summary}" filterBy="#{net.summary}">
+						<f:facet name="header">
+							<h:outputText value="Summary" />
+						</f:facet>
+						<h:outputText value="#{net.summary}" />
+					</p:column>
+
+					<p:column sortBy="#{net.address}" filterBy="#{net.address}">
+						<f:facet name="header">
+							<h:outputText value="Address" />
+						</f:facet>
+						<h:outputText value="#{net.address}" />
+					</p:column>
+
+					<p:column sortBy="#{net.allocation}" filterBy="#{net.alloation}">
+						<f:facet name="header">
+							<h:outputText value="Allocation" />
+						</f:facet>
+						<h:outputText value="#{net.allocation}" />
+					</p:column>
+					<p:column sortBy="#{net.state}" filterBy="#{net.state}">
+						<f:facet name="header">
+							<h:outputText value="State" />
+						</f:facet>
+						<h:outputText value="#{net.state}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+		</p:layoutUnit>
+
+	</p:layout>
+
+	<p:growl id="grow" showDetail="true" />
+	<p:dialog id="crDlg" header="Network Creation" widgetVar="createDlg"
+		showEffect="bounce" hideEffect="explode" width="600"
+		closeListener="#{networkBean.updateList}" onCloseUpdate="NTable"
+		update="NTable">
+		<h:form>
+
+			<p:wizard widgetVar="wiz" flowListener="#{networkBean.onFlowProcess}">
+
+				<p:tab id="gen" title="General">
+
+					<p:panel header="Network Details">
+						<p:focus />
+						<h:messages errorClass="error" />
+
+						<h:panelGrid columns="2" columnClasses="label, value"
+							styleClass="grid">
+							<h:outputText value="Title: *" />
+							<p:inputText id="crTitle" required="true" label="Tilte"
+								value="#{networkBean.net.title}" />
+
+							<h:outputText value="Summary: *" />
+							<p:inputText id="sum" required="true" label="Summary"
+								value="#{networkBean.net.summary}" />
+							<p:tooltip for="sum"
+								value="A Description of the network to be created"
+								showEvent="focus" hideEvent="blur" />
+
+							<h:outputText value="Skip to last: " />
+							<h:selectBooleanCheckbox value="#{networkBean.skip}" />
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="address" title="Configuration">
+					<p:panel header="Adress Details">
+
+						<h:messages errorClass="error" />
+
+						<h:panelGrid columns="2" columnClasses="label, value">
+
+							<h:outputText value="IP Address: " />
+							<p:inputText value="#{networkBean.net.address}" />
+
+							<h:outputText value="Allocation: " />
+							<p:inputText id="alloc" value="#{networkBean.net.allocation}" />
+							<p:tooltip for="alloc"
+								value="The allocation type : fixed/dynamic " showEvent="focus"
+								hideEvent="blur" />
+
+							<h:outputText value="Vlan: " />
+							<p:inputText value="#{networkBean.net.vlan}" />
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+
+				<p:tab id="confirm" title="Summary">
+					<p:panel header="Confirmation">
+
+						<p:growl id="growl" sticky="true" showDetail="true" />
+
+						<h:panelGrid id="confirmation" columns="6">
+							<h:outputText value="Title: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{networkBean.net.title}" />
+							<br />
+							<h:outputText value="Summary: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{networkBean.net.summary}" />
+							<br />
+							<h:outputText value="IP Address: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{networkBean.net.address}" />>
+					  <br />
+							<h:outputText value="Allocation: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{networkBean.net.allocation}" />
+
+						</h:panelGrid>
+
+						<p:commandButton value="Submit"
+							oncomplete="wiz.loadStep(wiz.cfg.steps[0], true);" update="grow"
+							actionListener="#{networkBean.save}">
+							<f:ajax render="NTable" />
+						</p:commandButton>
+
+					</p:panel>
+				</p:tab>
+			</p:wizard>
+
+			<p:ajaxStatus>
+				<f:facet name="start">
+					<h:graphicImage value="../design/ajaxloading.gif" />
+				</f:facet>
+
+				<f:facet name="complete">
+					<h:outputText value="" />
+				</f:facet>
+			</p:ajaxStatus>
+
+		</h:form>
+	</p:dialog>
+</h:body>
+</html>

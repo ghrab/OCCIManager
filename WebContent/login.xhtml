@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3c.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+    <title> Admin Console Login</title>
+    <link type="text/css" rel="stylesheet" href="themes/aristo/skin.css" />
+</h:head>
+<h:body>
+<center>
+<h1> OCCI Cloud Operations Center</h1>
+<div id="wrapper">
+      <div id="logo_sunstone">
+      </div>
+    <p:panel header="Login" style="width: 350;">
+        <h:form>
+            <h:panelGrid columns="2" cellpadding="2">
+                <h:outputLabel for="#{userManagedBean.username}" value="UserName"/>
+                <h:inputText value="#{userManagedBean.username}" label="UserName"></h:inputText>
+                <h:outputLabel for="#{userManagedBean.password}" value="Password"/>
+                <h:inputSecret value="#{userManagedBean.password}"></h:inputSecret>
+               
+                <h:outputLabel for="#{userManagedBean.serverURL}" value="Server"/>
+                <h:inputText value="#{userManagedBean.serverURL}" label="Server URL"></h:inputText>
+                <h:outputLabel for="#{userManagedBean.port}" value="PORT"/>
+                <h:inputText value="#{userManagedBean.port}" label="Port"></h:inputText>
+                <h:commandButton type="submit" value="Login" action="#{userManagedBean.login}"></h:commandButton>
+            </h:panelGrid>
+        </h:form>
+    </p:panel>    
+</div>
+</center>
+</h:body>
+</html>
+

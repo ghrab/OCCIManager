@@ -1,0 +1,132 @@
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+	<link type="text/css" rel="stylesheet" href="themes/bluesky/skin.css" />
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="top" height="85" header="Home"
+			resizable="true" closable="true" collapsible="true">
+			<h:form>
+				<p:toolbar>
+					<p:toolbarGroup align="left">
+						<p:commandButton action="compute" value="New Service" ajax="false"
+							type="push" image="ui-icon-document" />
+						<p:divider />
+						<p:commandButton action="network" value="Open Service"
+							ajax="false" type="push" image="ui-icon-folder-open" />
+					</p:toolbarGroup>
+
+				</p:toolbar>
+			</h:form>
+		</p:layoutUnit>
+
+
+		<p:layoutUnit position="right" width="180" header="Navigator"
+			resizable="true" closable="true" collapsible="true">
+
+			<h:form>
+				<p:menuButton value="Resources">
+					<p:menuitem value="Compute" url="compute.jsf" />
+					<p:menuitem value="Storage" url="storage.jsf" />
+					<p:menuitem value="Network" url="network.jsf" />
+				</p:menuButton>
+			</h:form>
+			<br />
+			<br />
+			<br />
+			<br />
+			<hr />
+			<h:outputText value="Themes" />
+			<p:themeSwitcher initialText="Change Skin" buttonPreText="Skin: " />
+
+		</p:layoutUnit>
+		<p:layoutUnit position="bottom" height="30" resizable="false"
+			closable="false" collapsible="false">
+			<div align="center">OCCI Cloud Management Center</div>
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center" header="Cloud Technologies">
+
+
+			<h:form>
+
+				<p:growl id="growl" showDetail="true" />
+
+				<p:tabView effect="opacity" effectDuration="normal">
+
+					<p:tab title="Cloud Computing">
+						<h:panelGrid columns="2" cellpadding="10">
+							<h:outputText
+								value="
+			 	During the last decade, a lot of discussions has been raised on academic and industrial fields
+about the cloud computing paradigm. The impact of the adoption of this paradigm is similar
+to the impact Web 2.0 1 has on Web applications. The latter has brought dynamism and
+interoperability on the World Wide Web, with focus on providing more end-users centric and
+friendly web content.
+Cloud computing has provided the infrastructure to deploy Web 2.0 applications. It has brought
+new services deployment models to meet the need of customers, switching the focus from endusers
+to Enterprise level." />
+							<h:outputText
+								value="
+A model for enabling convenient, on-demand network access to a shared pool of configurable computing 
+resources (e.g., networks, servers, storage, applications, and services) that can be 
+rapidly provisioned and released with minimal management effort or service provider interaction.." />
+
+						</h:panelGrid>
+					</p:tab>
+
+					<p:tab title="Virtual Execution environment Managers">
+					</p:tab>
+
+					<p:tab title="Service Managers">
+						<h:panelGrid columns="2" cellpadding="10">
+							<h:outputText value="" />
+						</h:panelGrid>
+					</p:tab>
+				</p:tabView>
+				<p:accordionPanel autoHeight="false"
+					tabChangeListener="#{tabBean.onTabChange}"
+					onTabChangeUpdate="growl">
+					<p:tab title="Open Virtualization Format" id="OVF">
+						<h:panelGrid columns="2" cellpadding="10">
+							<h:outputText
+								value="OVF is a Distributed Management Task Force (DMTF) 2 standard for packaging, distributing
+and deploying virtual appliances. A Virtual Appliance is a set of software appliances, i.e. precon
+figured software applications within a Just enough Operating System (JeOS), installed on
+one or more virtual machines(VM). This makes virtual appliances easier to deploy, with limited
+size and more performant than software installed on VMs. Moreover, it leverage customer from
+the task of installing and configuring each newly provisioned VM. Being packaged according to
+OVF standard gives virtual appliances the advantage of being portable, and thus deployable
+across multiple virtualization platforms. Within the cloud context, OVF provide a way to move
+VMs between cloud providers. OVF could be also used to describe services deployment and
+operation on the cloud [6]. It could serve for example to specify minimum requirement and
+scaling conditions of the service as it was proven on the Claudia project.[11] Dell, HP, IBM,
+Microsoft, VMware, XenSource and RedHat are among many other several virtualization players
+in the industry that have announced support for OVF." />
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="Cloud Data Management Interface" id="CDMI">
+						<h:panelGrid columns="2" cellpadding="10">
+							<h:outputText value="" />
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="Open Cloud Computing Interface" id="OCCI">
+						<h:panelGrid columns="2" cellpadding="10">
+							<h:outputText value="" />
+						</h:panelGrid>
+					</p:tab>
+				</p:accordionPanel>
+
+			</h:form>
+
+		</p:layoutUnit>
+	</p:layout>
+
+</h:body>
+</html>
+

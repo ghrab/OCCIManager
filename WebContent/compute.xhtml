@@ -1,0 +1,283 @@
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+	<link type="text/css" rel="stylesheet" href="themes/bluesky/skin.css" />
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="top" height="120" resizable="true">
+<h:form>
+			<p:dock position="top">
+				<p:menuitem value="Home" icon="/images/dock/home.png" url="home.jsf" />
+				<p:menuitem value="Machine" icon="/images/dock/data-center.png"
+					url="compute.jsf" />
+				<p:menuitem value="Storage" icon="/images/dock/storage.png"
+					url="storage.jsf" />
+				<p:menuitem value="Network" icon="/images/dock/network.png"
+					url="network.jsf" />
+				<p:menuitem value="Templates" icon="/images/dock/template.png"
+					url="#" />
+				<p:menuitem value="Documentation" icon="/images/dock/Tutorial.png"
+					url="http://opennebula.org/documentation:documentation" />
+				<p:menuitem value="About" icon="/images/dock/info.png"
+					url="http://euranova.eu" />
+				<p:menuitem value="Sign Out" icon="/images/dock/exit.png"
+					actionListener="#{userManagedBean.logout}" />
+			</p:dock>
+</h:form>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="bottom" height="30" resizable="false"
+			closable="false" collapsible="false">
+			<div align="center">OCCI Cloud Management Center</div>
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+
+			<h:form>
+				<p:toolbar>
+
+					<p:toolbarGroup align="left">
+						<p:commandButton type="push" value="Create"
+							onclick="createDlg.show();" image="ui-icon-document">
+						</p:commandButton>
+						<p:commandButton type="push" value="Update"
+							image="ui-icon ui-icon-arrowrefresh-1-w"
+							actionListener="#{computeBean.updateCmp}" update="CTable">
+						</p:commandButton>
+						<p:commandButton type="push" value="Delete" image="ui-icon-trash"
+							actionListener="#{computeBean.deleteCmp}" update="CTable">
+						</p:commandButton>
+						<p:divider />
+
+					</p:toolbarGroup>
+
+					<p:toolbarGroup align="right">
+
+						<p:commandButton type="push" value="Start"
+							actionListener="#{computeBean.startVM}"
+							image="ui-icon ui-icon-play" title="Start the Virtual Machine">
+						</p:commandButton>
+						<p:commandButton type="push" value="Restart"
+							actionListener="#{computeBean.restartVM}"
+							image="ui-icon ui-icon-refresh"
+							title="Restart the virtual machine">
+						</p:commandButton>
+						<p:commandButton type="push" value="Suspend"
+							actionListener="#{computeBean.suspendVM}"
+							image="ui-icon ui-icon-pause" title="Pause the virtual machine">
+						</p:commandButton>
+						<p:commandButton type="push" value="Stop"
+							actionListener="#{computeBean.stopVM}"
+							image="ui-icon ui-icon-stop" title="Shutdown the virtual machine">
+						</p:commandButton>
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:dataTable id="CTable" var="cmp"
+					value="#{computeBean.fullCmpList}" paginator="true" rows="10"
+					selection="#{computeBean.selectedCmp}" selectionMode="single"
+					onRowSelectUpdate="display" onRowSelectComplete="cmpDialog.show()">
+
+					<f:facet name="header">
+            List of Compute Resources
+        </f:facet>
+
+					<p:column sortBy="#{cmp.id}" filterBy="#{cmp.id}">
+						<f:facet name="header">
+							<h:outputText value="ID" />
+						</f:facet>
+						<h:outputText value="#{cmp.id}" />
+					</p:column>
+
+					<p:column sortBy="#{cmp.title}" filterBy="#{cmp.title}">
+						<f:facet name="header">
+							<h:outputText value="Title" />
+						</f:facet>
+						<h:outputText value="#{cmp.title}" />
+					</p:column>
+
+					<p:column sortBy="#{cmp.summary}" filterBy="#{cmp.summary}">
+						<f:facet name="header">
+							<h:outputText value="Summary" />
+						</f:facet>
+						<h:outputText value="#{cmp.summary}" />
+					</p:column>
+
+					<p:column sortBy="#{cmp.cores}" filterBy="#{cmp.cores}">
+						<f:facet name="header">
+							<h:outputText value="Cores" />
+						</f:facet>
+						<h:outputText value="#{cmp.cores}" />
+					</p:column>
+
+					<p:column sortBy="#{cmp.memo}" filterBy="#{cmp.memo}">
+						<f:facet name="header">
+							<h:outputText value="RAM" />
+						</f:facet>
+						<h:outputText value="#{cmp.memo}" />
+					</p:column>
+					<p:column sortBy="#{cmp.state}" filterBy="#{cmp.state}">
+						<f:facet name="header">
+							<h:outputText value="State" />
+						</f:facet>
+						<h:outputText value="#{cmp.state}" />
+					</p:column>
+
+				</p:dataTable>
+
+				<p:dialog header="Compute Detail" widgetVar="cmpDialog"
+					resizable="false" width="200" showEffect="explode"
+					hideEffect="explode">
+
+					<h:panelGrid id="display" columns="2" cellpadding="4">
+						<h:outputText value="Title:" />
+						<h:outputText value="#{computeBean.cmp.title}" />
+
+						<h:outputText value="Memory:" />
+						<h:outputText value="#{computeBean.cmp.memo}" />
+
+						<h:outputText value="Architecture:" />
+						<h:outputText value="#{computeBean.cmp.arch}" />
+					</h:panelGrid>
+				</p:dialog>
+
+			</h:form>
+
+
+		</p:layoutUnit>
+
+	</p:layout>
+
+	<p:growl id="grow" showDetail="true" />
+	<p:dialog id="crDlg" header="Compute Creation" widgetVar="createDlg"
+		showEffect="bounce" hideEffect="explode" width="700"
+	    onCloseUpdate="CTable" update="CTable">
+		<h:form >
+
+			<p:wizard widgetVar="wiz" flowListener="#{computeBean.onFlowProcess}">
+
+				<p:tab id="gen" title="General">
+
+					<p:panel header="Compute Details">
+
+						<h:messages errorClass="error" />
+
+						<h:panelGrid columns="2" columnClasses="label, value"
+							styleClass="grid">
+							<h:outputText value="Title: *" />
+							<p:inputText required="true" label="Tilte"
+								value="#{computeBean.cmp.title}" />
+
+							<h:outputText value="Summary: *" />
+							<p:inputText required="true" label="Summary"
+								value="#{computeBean.cmp.summary}" />
+
+
+							<h:outputText value="Skip to last: " />
+							<h:selectBooleanCheckbox value="#{computeBean.skip}" />
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="Conf" title="Configuration">
+					<p:panel header="Conf Details">
+
+						<h:messages errorClass="error" />
+
+						<h:panelGrid columns="2" columnClasses="label, value">
+
+							<h:outputText value="Architecture: " />
+							<h:selectOneMenu value="#{computeBean.cmp.arch}">
+    							<f:selectItems value="#{computeBean.listOfArch}"/>
+							</h:selectOneMenu>
+     
+							<h:outputText for="showon" value="Cores: " />							  
+            				<p:spinner id="showon" value="#{computeBean.cmp.cores}">  														  
+                			</p:spinner> 
+     
+							<h:outputText value="Memory: " />
+							<p:inputText value="#{computeBean.cmp.memo}" />
+	 
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+
+<p:tab id="Conf2" title="Links">
+					<p:panel header="Linked Resources Details">
+
+						<h:messages errorClass="error" />
+
+						<h:panelGrid columns="2" columnClasses="label, value">
+
+							<h:outputText value="Storage: " />
+							<h:selectOneMenu value="#{computeBean.str}">
+    							<f:selectItems value="#{computeBean.listOfStr}"/>
+							</h:selectOneMenu>
+    
+    						<h:outputText value="Network: " />
+							<h:selectOneMenu value="#{computeBean.net}">
+    							<f:selectItems value="#{computeBean.listOfNet}"/>
+							</h:selectOneMenu>
+     	 
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="confirm" title="Summary">
+					<p:panel header="Confirmation">
+
+						<p:growl id="growl" sticky="true" showDetail="true" />
+
+						<h:panelGrid id="confirmation" columns="6">
+							<h:outputText value="Title: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{computeBean.cmp.title}" />
+							<br />
+							<h:outputText value="Summary: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{computeBean.cmp.summary}" />
+							<br />
+							<h:outputText value="Architecture: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{computeBean.cmp.arch}" />>
+					  <br />
+							<h:outputText value="Memory: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{computeBean.cmp.memo}" />
+
+							<br />
+							<h:outputText value="Cores: " />
+							<h:outputText styleClass="outputLabel"
+								value="#{computeBean.cmp.cores}" />
+						</h:panelGrid>
+
+						<p:commandButton value="Submit"
+							oncomplete="wiz.loadStep(wiz.cfg.steps[0], true);" update="grow"
+							actionListener="#{computeBean.save}">
+							<f:ajax render="CTable" />
+						</p:commandButton>
+
+					</p:panel>
+				</p:tab>
+			</p:wizard>
+
+			<p:ajaxStatus>
+				<f:facet name="start">
+					<h:graphicImage value="../design/ajaxloading.gif" />
+				</f:facet>
+
+				<f:facet name="complete">
+					<h:outputText value="" />
+				</f:facet>
+			</p:ajaxStatus>
+
+		</h:form>
+	</p:dialog>
+
+</h:body>
+</html>
