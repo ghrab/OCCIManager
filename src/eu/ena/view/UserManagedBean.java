@@ -68,7 +68,7 @@ public class UserManagedBean {
 		if ("occi".equalsIgnoreCase(getUsername())
 				&& "occi".equals(getPassword())) {
 
-			OcciUser loggedUser = new OcciUser(username,serverURL,port);
+			OcciUser loggedUser = new OcciUser(username,password,serverURL,port);
 		
             session.setAttribute("user", loggedUser);
             System.out.println(loggedUser.getServerURL());

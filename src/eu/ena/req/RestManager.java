@@ -11,9 +11,12 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.http.*;
+import org.apache.http.auth.AuthenticationException;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.*;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
@@ -49,9 +52,16 @@ public class RestManager {
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpConnectionParams
 				.setConnectionTimeout(httpClient.getParams(), 10000);
-		
-		System.out.println("USER CRED"+user.getServerURL()+":"+user.getPort());
+				
 		HttpGet httpget = new HttpGet( user.getServerURL()+":"+user.getPort() + url);
+		
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.getName(), user.getPassword());		
+		try {
+			httpget.addHeader(new BasicScheme().authenticate(creds, httpget));
+		} catch (AuthenticationException e) {
+			System.out.println("login problem");
+			e.printStackTrace();
+		}
 		
 		HttpResponse response = httpClient.execute(httpget);
 		HttpEntity entity = response.getEntity();
