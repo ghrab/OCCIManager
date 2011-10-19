@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import eu.ena.occi.OcciUser;
+import eu.ena.req.RestManager;
 
 @ManagedBean
 @SessionScoped
@@ -24,10 +25,10 @@ public class UserManagedBean {
 
 	HttpSession session;
 	ExternalContext ec;
-	
+	FacesContext context;
 	public UserManagedBean(){
 	
-	FacesContext context = FacesContext.getCurrentInstance();
+	context = FacesContext.getCurrentInstance();
 	ec = context.getExternalContext();
 	session = (HttpSession) ec.getSession(false); 
 	
@@ -65,20 +66,20 @@ public class UserManagedBean {
 	}
 
 	public String login() {
-		if ("occi".equalsIgnoreCase(getUsername())
-				&& "occi".equals(getPassword())) {
-
-			OcciUser loggedUser = new OcciUser(username,password,serverURL,port);
 		
-            session.setAttribute("user", loggedUser);
-            System.out.println(loggedUser.getServerURL());
+		try {
+			RestManager.getResource("-");
+			OcciUser loggedUser = new OcciUser(username,password,serverURL,port);
+			session.setAttribute("user", loggedUser);
+	        System.out.println(loggedUser.getServerURL());
 			return "home";
-		} else {
-			FacesContext context = FacesContext.getCurrentInstance();
+		} catch (IOException e) {
+					
 			context.addMessage("username", new FacesMessage(
 					"Invalid UserName and Password"));
 			return "login";
-		}
+		}		
+								
 	}
 
 	public String logout()
@@ -86,8 +87,7 @@ public class UserManagedBean {
 	 // invalidate session
 		if (session != null) {		
 			session.invalidate();			
-			}
-		
+			}		
 		try {
 	       ec.redirect("index.jsf");
 	   } catch (IOException e) {
