@@ -239,14 +239,12 @@ public class OcciResManager {
 			System.out.println(element.toString());
 			Network net = new Network();
 			net.setCategory("network");
-			net.setId(element.get("occi.core.id").replace("\"", ""));
-			net.setTitle(element.get("occi.core.title").replace("\"", ""));
-			net.setSummary(element.get("occi.core.summary").replace("\"", ""));
-			net.setAddress(element.get("occi.network.address")
-					.replace("\"", ""));
-			net.setAllocation(element.get("occi.network.allocation").replace(
-					"\"", ""));
-			net.setState(element.get("occi.network.state").replace("\"", ""));
+			net.setId(element.get("occi.core.id"));
+			net.setTitle(element.get("occi.core.title"));
+			net.setSummary(element.get("occi.core.summary"));
+			net.setAddress(element.get("occi.network.address"));
+			net.setAllocation(element.get("occi.network.allocation"));
+			net.setState(element.get("occi.network.state"));
 
 			// System.out.println(net.getId());
 			return net;

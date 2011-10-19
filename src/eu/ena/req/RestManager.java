@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -39,16 +38,19 @@ public class RestManager {
 	 * @param url
 	 *            the url of the resource to be discovered
 	 */
+	
 	static FacesContext context = FacesContext.getCurrentInstance();
 	static HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-	static OcciUser user=(OcciUser)session.getAttribute("user");
 	
-	public static String getResource(final String url) throws IOException {
-
+	public static String getResource(String url) throws IOException {
+		
+		OcciUser user=(OcciUser)session.getAttribute("user");
+		
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpConnectionParams
 				.setConnectionTimeout(httpClient.getParams(), 10000);
 		
+		System.out.println("USER CRED"+user.getServerURL()+":"+user.getPort());
 		HttpGet httpget = new HttpGet( user.getServerURL()+":"+user.getPort() + url);
 		
 		HttpResponse response = httpClient.execute(httpget);
@@ -69,6 +71,8 @@ public class RestManager {
 	public static String postResource(final String url,
 			Map<String, String> postHeaders) throws IOException {
 
+		OcciUser user=(OcciUser)session.getAttribute("user");
+		
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpConnectionParams
 				.setConnectionTimeout(httpClient.getParams(), 10000);
@@ -109,7 +113,10 @@ public class RestManager {
 
 	public static boolean putResource(final String url, final String putHeaders)
 			throws IOException {
-	    HttpClient httpClient = new DefaultHttpClient();
+
+		OcciUser user=(OcciUser)session.getAttribute("user");
+		
+		HttpClient httpClient = new DefaultHttpClient();
 		HttpConnectionParams
 				.setConnectionTimeout(httpClient.getParams(), 10000);
 
@@ -128,7 +135,9 @@ public class RestManager {
 	 * Returns a boolean to tell if delete operation succeeded Delete requests
 	 */
 	public static boolean deleteResource(final String url) throws IOException {
-
+			
+		OcciUser user=(OcciUser)session.getAttribute("user");	
+		
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpConnectionParams
 				.setConnectionTimeout(httpClient.getParams(), 10000);

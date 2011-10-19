@@ -25,7 +25,7 @@
 				<p:menuitem value="About" icon="/images/dock/info.png"
 					url="http://euranova.eu" />
 				<p:menuitem value="Sign Out" icon="/images/dock/exit.png"
-					actionListener="#{storageBean.logout}"  />
+					actionListener="#{userManagedBean.logout}"  />
 			</p:dock>
 </h:form>
 		</p:layoutUnit>
@@ -101,12 +101,9 @@
 
 				<p:dataTable id="STable" var="str"
 					value="#{storageBean.fullStrList}" paginator="true" rows="10"
-					selection="#{storageBean.selectedStr}" selectionMode="single"
-					onRowSelectUpdate="display" onRowSelectComplete="strDialog.show()">
+					selection="#{storageBean.selectedStr}" selectionMode="single">
 
-					<f:facet name="header">
-            List of Storage Resources
-        </f:facet>
+					<f:facet name="header">  List of Storage Resources  </f:facet>
 
 					<p:column sortBy="#{str.id}" filterBy="#{str.id}">
 						<f:facet name="header">
@@ -151,24 +148,15 @@
 
 				</p:dataTable>
 
-				<p:dialog header="Storage Detail" widgetVar="strDialog"
-					resizable="false" width="200" showEffect="explode"
-					hideEffect="explode">
-
-					<h:panelGrid id="display" columns="2" cellpadding="4">
-
-					</h:panelGrid>
-				</p:dialog>
-
 			</h:form>
 
 		</p:layoutUnit>
 
 	</p:layout>
+	
 	<p:growl id="grow" showDetail="true" />
 	<p:dialog id="crDlg" header="Storage Creation" widgetVar="createDlg"
-		showEffect="bounce" hideEffect="explode" width="600"
-		closeListener="#{storageBean.updateList}" onCloseUpdate="STable"
+		showEffect="bounce" hideEffect="explode" width="700"
 		update="STable">
 		<h:form>
 
@@ -208,7 +196,17 @@
 							<p:inputText value="#{storageBean.str.filePath}" />
 
 						</h:panelGrid>
-					</p:panel>
+						<h:form enctype="multipart/form-data">  
+  
+    <p:fileUpload fileUploadListener="#{storageBean.handleFileUpload}"  
+            mode="advanced"   
+            update="messages"    
+            allowTypes="*.img"/>  
+  
+    <p:growl id="messages" showDetail="true"/>  
+  
+</h:form>
+					</p:panel>					
 				</p:tab>
 
 

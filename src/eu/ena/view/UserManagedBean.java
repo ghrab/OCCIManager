@@ -1,8 +1,12 @@
 package eu.ena.view;
 
+import java.io.IOException;
+
+import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -18,6 +22,16 @@ public class UserManagedBean {
 	private String serverURL;
 	private String port;
 
+	HttpSession session;
+	ExternalContext ec;
+	
+	public UserManagedBean(){
+	
+	FacesContext context = FacesContext.getCurrentInstance();
+	ec = context.getExternalContext();
+	session = (HttpSession) ec.getSession(false); 
+	
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -55,9 +69,7 @@ public class UserManagedBean {
 				&& "occi".equals(getPassword())) {
 
 			OcciUser loggedUser = new OcciUser(username,serverURL,port);
-			
-			FacesContext context = FacesContext.getCurrentInstance();
-            HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+		
             session.setAttribute("user", loggedUser);
             System.out.println(loggedUser.getServerURL());
 			return "home";
@@ -69,10 +81,20 @@ public class UserManagedBean {
 		}
 	}
 
-	public String logout() {
-		((HttpSession) FacesContext.getCurrentInstance().getExternalContext()
-				.getSession(true)).invalidate();
-		return "home.xhtml?faces-redirect=true";
+	public String logout()
+	{
+	 // invalidate session
+		if (session != null) {		
+			session.invalidate();			
+			}
+		
+		try {
+	       ec.redirect("index.jsf");
+	   } catch (IOException e) {
+	       System.out.println("Redirect to the login page failed");
+	       throw new FacesException(e);
+	   }	   
+	   return null;
 	}
 
 }

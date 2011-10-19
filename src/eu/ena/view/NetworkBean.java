@@ -7,7 +7,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.CloseEvent;
 import org.primefaces.event.FlowEvent;
@@ -104,12 +103,6 @@ public class NetworkBean {
 
 	public void downNet() {
 		this.selectedNet.desactivateNet();
-	}
-	
-	public String logout() {
-		((HttpSession) FacesContext.getCurrentInstance().getExternalContext()
-				.getSession(false)).invalidate();
-		return "login";
 	}
 
 }

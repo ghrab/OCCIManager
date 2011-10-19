@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.CloseEvent;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 
 import eu.ena.occi.Storage;
@@ -36,7 +37,7 @@ public class StorageBean {
 		fullStrList = OcciResManager.getStrList();
 		System.out.println("List to be updated Now");
 	}
-
+    
 	public Storage getSelectedStr() {
 		return selectedStr;
 	}
@@ -98,6 +99,11 @@ public class StorageBean {
 		}
 	}
 
+    public void handleFileUpload(FileUploadEvent event) {  
+        FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+    } 
+	
 	String size;
 	
 	

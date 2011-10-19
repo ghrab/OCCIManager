@@ -51,47 +51,56 @@
 		</p:layoutUnit>
 
 		<p:layoutUnit position="center" header="Cloud Technologies">
+			<h:panelGrid columns="2" cellpadding="10">
+				<p:carousel itemStyleClass="carItem" pageLinks="5"
+					autoPlayInterval="3000" rows="1" effect="easeInStrong"
+					circular="true" itemStyle="border:2px;height:260px;width:320px;">
+					<p:graphicImage value="/images/ccloud.png" />
+					<p:graphicImage value="/images/DCcloud.jpg" />
+					<p:graphicImage value="/images/key.jpg" />
+					<p:graphicImage value="/images/Design.png" />
+					<p:graphicImage value="/images/broken.png" />
+				</p:carousel>
+				<h:form>
 
+					<p:growl id="growl" showDetail="true" />
 
+					<h3>The project</h3>
+					<p:panel header="The Purpose">
+						<h:outputText
+							value="Break down cloud vendors Lock in using an OCCI-based Service Manager supporting integration" />
+					</p:panel>
+					<p:panel header="The Tools">
+						<h:outputText
+							value="OVF : Packaging, Extension : Service Description" />
+						<br />
+						<h:outputText value="CDMI : Data Containers Management" />
+						<br />
+						<h:outputText value="OCCI : Cloud Management" />
+					</p:panel>
+				</h:form>
+
+			</h:panelGrid>
 			<h:form>
 
 				<p:growl id="growl" showDetail="true" />
 
-				<p:tabView effect="opacity" effectDuration="normal">
-
-					<p:tab title="Cloud Computing">
-						<h:panelGrid columns="2" cellpadding="10">
-							<h:outputText
-								value="
-			 	During the last decade, a lot of discussions has been raised on academic and industrial fields
-about the cloud computing paradigm. The impact of the adoption of this paradigm is similar
-to the impact Web 2.0 1 has on Web applications. The latter has brought dynamism and
-interoperability on the World Wide Web, with focus on providing more end-users centric and
-friendly web content.
-Cloud computing has provided the infrastructure to deploy Web 2.0 applications. It has brought
-new services deployment models to meet the need of customers, switching the focus from endusers
-to Enterprise level." />
-							<h:outputText
-								value="
-A model for enabling convenient, on-demand network access to a shared pool of configurable computing 
-resources (e.g., networks, servers, storage, applications, and services) that can be 
-rapidly provisioned and released with minimal management effort or service provider interaction.." />
-
-						</h:panelGrid>
-					</p:tab>
-
-					<p:tab title="Virtual Execution environment Managers">
-					</p:tab>
-
-					<p:tab title="Service Managers">
-						<h:panelGrid columns="2" cellpadding="10">
-							<h:outputText value="" />
-						</h:panelGrid>
-					</p:tab>
-				</p:tabView>
 				<p:accordionPanel autoHeight="false"
 					tabChangeListener="#{tabBean.onTabChange}"
 					onTabChangeUpdate="growl">
+					<p:tab title="Open Cloud Computing Interface" id="OCCI">
+						<h:panelGrid columns="2" cellpadding="10">
+							<h:outputText
+								value="The Open Cloud Computing Interface (OCCI) from the Open Grid Forum (OGF) is a RESTful
+Protocol and API initiated to create a remote management API for IaaS model based Services
+but extended to support PaaS and SaaS as well.
+OCCI provides a cloud management interface with focus on interoperability, hence it supports
+the management of the service life-cycle including its underlying resources. Namely, definition,
+creation, deployment and undeployement. OCCI enable the interoperability and the integration
+between different IaaS cloud platforms by providing Common Mechanisms for the Repre-
+sentation, Discovery and Management of the resources." />
+						</h:panelGrid>
+					</p:tab>
 					<p:tab title="Open Virtualization Format" id="OVF">
 						<h:panelGrid columns="2" cellpadding="10">
 							<h:outputText
@@ -112,12 +121,15 @@ in the industry that have announced support for OVF." />
 					</p:tab>
 					<p:tab title="Cloud Data Management Interface" id="CDMI">
 						<h:panelGrid columns="2" cellpadding="10">
-							<h:outputText value="" />
-						</h:panelGrid>
-					</p:tab>
-					<p:tab title="Open Cloud Computing Interface" id="OCCI">
-						<h:panelGrid columns="2" cellpadding="10">
-							<h:outputText value="" />
+							<h:outputText
+								value="The Cloud Data Management Interface (CDMI) is a standard developed by Storage Networking
+Industry Association (SNIA) 5. One of the fundamental cloud concepts is resources virtualization
+to enable sharing. And since storage capacities are not fully used through IT infrastructure
+they are virtualized too, then storage management interfaces becomes needed. CDMI comes
+as a response, basically serving as an interface to fulfill CRUD(create, retrieve,update delete)
+tasks through the cloud. It also enables users to discover and manage individual or set of data
+elements(containers) and their meta-data. The data management implies management of related
+aspect such as security access and billing policies." />
 						</h:panelGrid>
 					</p:tab>
 				</p:accordionPanel>
