@@ -52,21 +52,26 @@ public class RestManager {
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpConnectionParams
 				.setConnectionTimeout(httpClient.getParams(), 10000);
-				
-		HttpGet httpget = new HttpGet( user.getServerURL()+":"+user.getPort() + url);
+
+		HttpGet httpGet = new HttpGet( user.getServerURL()+":"+user.getPort() + url);
 		
 		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.getName(), user.getPassword());		
 		try {
-			httpget.addHeader(new BasicScheme().authenticate(creds, httpget));
+		httpGet.addHeader(new BasicScheme().authenticate(creds, httpGet));		
+		
+		HttpResponse response = httpClient.execute(httpGet);
+		HttpEntity entity = response.getEntity();
+		InputStream instream = entity.getContent();
+		return read(instream);
 		} catch (AuthenticationException e) {
 			System.out.println("login problem");
 			e.printStackTrace();
 		}
-		
-		HttpResponse response = httpClient.execute(httpget);
-		HttpEntity entity = response.getEntity();
-		InputStream instream = entity.getContent();
-		return read(instream);
+		 catch (Exception e) {
+		System.out.println("Verify url and port problem");
+		e.printStackTrace();
+		}
+		return "login error";
 	}
 
 	/**
@@ -89,6 +94,11 @@ public class RestManager {
 
 		HttpPost httpPost = new HttpPost(user.getServerURL()+":"+user.getPort()+ url);
 
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.getName(), user.getPassword());		
+
+		try {		
+		httpPost.addHeader(new BasicScheme().authenticate(creds, httpPost));
+		
 		if (!postHeaders.get("Category").contains("?action")) // Verification
 																// are added
 																// only on CRUD
@@ -116,9 +126,21 @@ public class RestManager {
 		httpPost.addHeader("X-OCCI-Attribute",
 				postHeaders.get("X-OCCI-Attribute"));
 
+		
+		
 		HttpResponse response = httpClient.execute(httpPost);
-		InputStream instream = response.getEntity().getContent();
+		HttpEntity entity = response.getEntity();
+		InputStream instream = entity.getContent();
 		return read(instream);
+		} catch (AuthenticationException e) {
+			System.out.println("login problem");
+			e.printStackTrace();
+		}
+		 catch (Exception e) {
+		System.out.println("Verify url and port problem");
+		e.printStackTrace();
+		}
+		return "login error";
 	}
 
 	public static boolean putResource(final String url, final String putHeaders)
@@ -130,15 +152,29 @@ public class RestManager {
 		HttpConnectionParams
 				.setConnectionTimeout(httpClient.getParams(), 10000);
 
-		HttpPut httpPut = new HttpPut(user.getServerURL()+":"+user.getPort()+ url);
+		HttpPut httpPut = new HttpPut(user.getServerURL()+":"+user.getPort()+ url);		
 		httpPut.addHeader("Accept", "text/plain");
 		httpPut.addHeader("Content-Type", "text/plain");
 		StringEntity entity = new StringEntity(putHeaders, "UTF-8");
 		entity.setContentType("text/plain");
 		httpPut.setEntity(entity);
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.getName(), user.getPassword());		
+
+		try {		
+		httpPut.addHeader(new BasicScheme().authenticate(creds, httpPut));
+
 		HttpResponse response = httpClient.execute(httpPut);
 		int statusCode = response.getStatusLine().getStatusCode();
 		return statusCode == HTTP_OK ? true : false;
+	} catch (AuthenticationException e) {
+		System.out.println("login problem");
+		e.printStackTrace();
+	}
+	 catch (Exception e) {
+	System.out.println("Verify url and port problem");
+	e.printStackTrace();
+	}
+	return false;
 	}
 
 	/**
@@ -152,11 +188,25 @@ public class RestManager {
 		HttpConnectionParams
 				.setConnectionTimeout(httpClient.getParams(), 10000);
 
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user.getName(), user.getPassword());		
 		HttpDelete httpDelete = new HttpDelete(user.getServerURL()+":"+user.getPort()  + url);
+		try {		
+		httpDelete.addHeader(new BasicScheme().authenticate(creds, httpDelete));		
+		
 		httpDelete.addHeader("Accept", "text/plain");
 		HttpResponse response = httpClient.execute(httpDelete);
 		int statusCode = response.getStatusLine().getStatusCode();
 		return statusCode == HTTP_OK ? true : false;
+		
+		} catch (AuthenticationException e) {
+			System.out.println("login problem");
+			e.printStackTrace();
+		}
+		 catch (Exception e) {
+		System.out.println("Verify url and port problem");
+		e.printStackTrace();
+		}
+		return false;
 	}
 
 	/**
