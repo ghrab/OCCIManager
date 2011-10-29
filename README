@@ -1,0 +1,33 @@
+ Purpose
+
+Development of a proof of concept of the management of multiple cloud VEEM through a single entry point communicating with the existing VEEM OCCI interfaces.
+
+  Steps
+
+Development of a basic tool to perform CRUD operations on the OCCI Resources
+Support for the Actions
+Support of services isolation
+Integration of Openstack once OCCI implementation released.
+
+ State of the Art
+
+A Java web-based application based on Primefaces
+Users Authentication
+Display and Deletion of existing User's Resources
+Creation of Compute and Network Resources, still facing problem with the upload of images
+ 
+ Next
+
+Not all possible resource creation details are covered, need to expand the support of configuration during the creation of a resource
+Perform full Tests on a cluster managed by OpenNebula.
+
+ Configuration:
+
+ Eclipse Indigo (3.7)
+ Tomcat 7 
+ Primefaces-3.0.M1 
+ Ubuntu 10.04, 32 bit
+ Opennebula 3 beta
+ OCCI  Server 0.3 beta
+
+Request are made according to the sample requests on this page : dev.opennebula.org/projects/ogf-occi/wiki/Exmple_requests
