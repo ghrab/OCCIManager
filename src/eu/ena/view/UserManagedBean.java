@@ -68,10 +68,11 @@ public class UserManagedBean {
 	public String login() {
 		
 		try {
-			RestManager.getResource("-");
+			
 			OcciUser loggedUser = new OcciUser(username,password,serverURL,port);
 			session.setAttribute("user", loggedUser);
 	        System.out.println(loggedUser.getServerURL());
+			RestManager.getResource("/-/");
 			return "home";
 		} catch (IOException e) {
 					
